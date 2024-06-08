@@ -1,0 +1,60 @@
+# /etc/dhcp/dhcpd.conf
+
+
+
+# Global/default settings
+ddns-update-style none;
+option domain-name "cqunix.com";
+#option domain-name-servers 8.8.8.8, 8.8.4.4;
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+log-facility local7;
+
+# Subnet declaration for dynamic IP addresses
+subnet 192.168.2.0 netmask 255.255.255.0 {
+    range 192.168.2.100 192.168.2.200;
+    option domain-name "cqunix.com";
+    option subnet-mask 255.255.255.0;
+    option routers 192.168.2.2;
+    option broadcast-address 192.168.2.255;
+    default-lease-time 600;
+    max-lease-time 7200;
+}
+
+# Static IP allocation
+group {
+    option routers 192.168.2.2;
+    option broadcast-address 192.168.2.255;
+
+    host clientvm1 {
+        hardware ethernet 1a:24:fb:51:59:ce;  # MAC address of ClientVM1
+        fixed-address 192.168.2.10;  # Static IP address for ClientVM1
+    }
+
+    host clientvm2 {
+        hardware ethernet 00:24:48:97:78:ec;  # MAC address of ClientVM2
+        fixed-address 192.168.2.11;  # Static IP address for ClientVM2
+    }
+
+
+
+
+# /etc/default/isc-dhcp-server
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPDv4_CONF=/etc/dhcp/dhcpd.conf
+#DHCPDv6_CONF=/etc/dhcp/dhcpd6.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPDv4_PID=/var/run/dhcpd.pid
+#DHCPDv6_PID=/var/run/dhcpd6.pid
+
+# Additional options to start dhcpd with.
+#   Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACESv4="enp0s8"
+INTERFACESv6=""
